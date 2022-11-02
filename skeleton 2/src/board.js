@@ -9,6 +9,12 @@ if (typeof window === 'undefined'){
  * and two white pieces at [3, 3] and [4, 4]
  */
 function _makeGrid () {
+  let array = new Array (8)
+  let grid = new Array
+  for (let i = 0; i < 8; i++) {
+    grid.push(array)
+  }
+  return grid
 }
 
 /**
@@ -28,6 +34,7 @@ Board.DIRS = [
  * Checks if a given position is on the Board.
  */
 Board.prototype.isValidPos = function (pos) {
+
 };
 
 /**
