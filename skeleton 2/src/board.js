@@ -194,6 +194,23 @@ Board.prototype.isOver = function () {
  * Prints a string representation of the Board to the console.
  */
 Board.prototype.print = function () {
+  let printGrid = []
+
+  for (let i = 0; i < this.grid.length; i++) {
+    let row = []
+    for (let j = 0; j < this.grid.length; j++) {
+      let square = this.grid[j][i]
+
+      if (square) {
+        row.push(square.color === "black" ? "⚫️" : "⚪️")
+      } else {
+        row.push("  ")
+      }
+    }
+    printGrid.push(row.join(","))
+  }
+  // ⚫️ ⚪️
+  console.log(printGrid)
 };
 
 
@@ -202,3 +219,6 @@ if (typeof window === 'undefined'){
   module.exports = Board;
 }
 // DON'T TOUCH THIS CODE
+
+let b = new Board
+// console.log(b.print())
