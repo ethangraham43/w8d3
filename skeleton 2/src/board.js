@@ -94,33 +94,23 @@ Board.prototype.isOccupied = function (pos) {
  */
 Board.prototype._positionsToFlip = function(pos, color, dir, piecesToFlip){
 
+  
   let [xPos, yPos] = pos
   let [xDir, yDir] = dir
   let nextPos = [xPos + xDir, yPos + yDir]
-
-  if (!this.isValidPos(pos)) return piecesToFlip = [];
-
-  if (!this.isOccupied(pos)) return piecesToFlip = [];
-
-  if (this.isMine(pos, color)) return piecesToFlip;
-
-  if (!piecesToFlip) piecesToFlip = []
-  piecesToFlip.push(pos)
-  console.log(piecesToFlip)
-  let nextMove = this._positionsToFlip(nextPos, color, dir, piecesToFlip)
-  if (nextMove === []) {
-    return []
-  } else {
-    return piecesToFlip
+  if (!piecesToFlip) {
+    piecesToFlip = []
   }
-
-
-  // if (this.grid.isMine(nextPos, color)) {
-
-  // } else if (this.grid.isValidPos(nextPos) && this.grid.isOccupied(nextPos)) {
-  //   piecesToFlip += this.grid.getPiece(nextPos)
-  //   this.grid._positionsToFlip(nextPos, color, dir, piecesToFlip)
-  // }
+  // debugger
+  
+  if (!this.isValidPos(pos) || !this.isOccupied(nextPos)) return [];
+  if (this.isMine(pos, color)) return piecesToFlip
+  if (!this.isMine(nextPos, color)) piecesToFlip.push(nextPos)
+  
+  if (!this.isMine(nextPos, color)) {
+    piecesToFlip = this._positionsToFlip(nextPos, color, dir, piecesToFlip)
+  } 
+  return piecesToFlip
 
 };
 
