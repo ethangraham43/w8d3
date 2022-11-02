@@ -43,7 +43,7 @@ Board.DIRS = [
  * Checks if a given position is on the Board.
  */
 Board.prototype.isValidPos = function (pos) {
-  [x, y] = pos
+  let [x, y] = pos
   if (x < 0 || y < 0 || x > 7 || y > 7) {
     return false
   }
@@ -55,7 +55,7 @@ Board.prototype.isValidPos = function (pos) {
  * throwing an Error if the position is invalid.
  */
 Board.prototype.getPiece = function (pos) {
-  [x, y] = pos
+  let [x, y] = pos
   if (!this.isValidPos(pos)) throw new Error ("Not valid pos!")
   return this.grid[x][y]
 };
@@ -94,16 +94,33 @@ Board.prototype.isOccupied = function (pos) {
  */
 Board.prototype._positionsToFlip = function(pos, color, dir, piecesToFlip){
 
-  [xPos, yPos] = pos
-  [xDir, yDir] = dir
+  let [xPos, yPos] = pos
+  let [xDir, yDir] = dir
   let nextPos = [xPos + xDir, yPos + yDir]
-  
-  if (this.grid.isMine(nextPos, color)) {
 
-  } else if (this.grid.isValidPos(nextPos) && this.grid.isOccupied(nextPos)) {
-    piecesToFlip += this.grid.getPiece(nextPos)
-    this.grid._positionsToFlip(nextPos, color, dir, piecesToFlip)
+  if (!this.isValidPos(pos)) return piecesToFlip = [];
+
+  if (!this.isOccupied(pos)) return piecesToFlip = [];
+
+  if (this.isMine(pos, color)) return piecesToFlip;
+
+  if (!piecesToFlip) piecesToFlip = []
+  piecesToFlip.push(pos)
+  console.log(piecesToFlip)
+  let nextMove = this._positionsToFlip(nextPos, color, dir, piecesToFlip)
+  if (nextMove === []) {
+    return []
+  } else {
+    return piecesToFlip
   }
+
+
+  // if (this.grid.isMine(nextPos, color)) {
+
+  // } else if (this.grid.isValidPos(nextPos) && this.grid.isOccupied(nextPos)) {
+  //   piecesToFlip += this.grid.getPiece(nextPos)
+  //   this.grid._positionsToFlip(nextPos, color, dir, piecesToFlip)
+  // }
 
 };
 
