@@ -21,7 +21,7 @@ Piece.prototype.oppColor = function () {
  */
 Piece.prototype.flip = function () {
     this.color = this.oppColor();
-    return this.color
+
 };
 
 /**
