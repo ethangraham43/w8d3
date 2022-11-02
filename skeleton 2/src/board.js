@@ -9,11 +9,20 @@ if (typeof window === 'undefined'){
  * and two white pieces at [3, 3] and [4, 4]
  */
 function _makeGrid () {
-  let array = new Array (8)
   let grid = new Array
   for (let i = 0; i < 8; i++) {
+    let array = new Array
+    for (let j = 0; j < 8; j++) {
+      array.push(undefined)
+    }
     grid.push(array)
   }
+
+  grid[3][4] = new Piece("black")
+  grid[4][3] = new Piece("black")
+  grid[3][3] = new Piece("white")
+  grid[4][4] = new Piece("white")
+
   return grid
 }
 
@@ -21,7 +30,7 @@ function _makeGrid () {
  * Constructs a Board with a starting grid set up.
  */
 function Board () {
-  this.grid = _makeGrid();
+  this.grid = _makeGrid(); 
 }
 
 Board.DIRS = [
@@ -34,7 +43,11 @@ Board.DIRS = [
  * Checks if a given position is on the Board.
  */
 Board.prototype.isValidPos = function (pos) {
-
+  [x, y] = pos
+  if (x < 0 || y < 0 || x > 7 || y > 7) {
+    return false
+  }
+  return true
 };
 
 /**
@@ -42,6 +55,9 @@ Board.prototype.isValidPos = function (pos) {
  * throwing an Error if the position is invalid.
  */
 Board.prototype.getPiece = function (pos) {
+  [x, y] = pos
+  if (!this.isValidPos(pos)) throw new Error ("Not valid pos!")
+  return this.grid[x][y]
 };
 
 /**
@@ -49,12 +65,18 @@ Board.prototype.getPiece = function (pos) {
  * matches a given color.
  */
 Board.prototype.isMine = function (pos, color) {
+  piece = this.getPiece(pos)
+  if (piece) {
+    return piece.color === color
+  } 
+  return piece
 };
 
 /**
  * Checks if a given position has a piece on it.
  */
 Board.prototype.isOccupied = function (pos) {
+  return !!this.getPiece(pos)
 };
 
 /**
@@ -71,6 +93,18 @@ Board.prototype.isOccupied = function (pos) {
  * Returns empty array if no pieces of the opposite color are found.
  */
 Board.prototype._positionsToFlip = function(pos, color, dir, piecesToFlip){
+
+  [xPos, yPos] = pos
+  [xDir, yDir] = dir
+  let nextPos = [xPos + xDir, yPos + yDir]
+  
+  if (this.grid.isMine(nextPos, color)) {
+
+  } else if (this.grid.isValidPos(nextPos) && this.grid.isOccupied(nextPos)) {
+    piecesToFlip += this.grid.getPiece(nextPos)
+    this.grid._positionsToFlip(nextPos, color, dir, piecesToFlip)
+  }
+
 };
 
 /**
